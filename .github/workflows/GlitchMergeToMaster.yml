@@ -2,11 +2,14 @@ name: Glitch Merge to Master
 on:
   push:
     branches: [ glitch ]
+  workflow_dispatch:
 jobs:
-  automerge:
+  mergetomaster:
     runs-on: ubuntu-latest
     steps:
+      - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: console.log(context)
+          script: | 
+            console.log(context);
