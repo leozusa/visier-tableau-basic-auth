@@ -3,6 +3,7 @@ on:
   push:
     branches: [ glitch ]
   workflow_dispatch:
+  repository_dispatch:
 jobs:
   mergetomaster:
     runs-on: ubuntu-latest
