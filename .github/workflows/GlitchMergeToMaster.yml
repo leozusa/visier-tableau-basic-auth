@@ -12,5 +12,11 @@ jobs:
       - uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: | 
-            console.log(context.payload.head_commit.message);
+          script: |
+            github.repos.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_message: context.payload.head_commit.message,
+              head: 'glitch',
+              base: 'master',
+            });
