@@ -1,14 +1,11 @@
-name: Glitch Merge to Master
+name: Glitch Merge to Main
 on:
   push:
     branches: [ glitch ]
-  workflow_dispatch:
-  repository_dispatch:
 jobs:
   mergetomaster:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -18,5 +15,5 @@ jobs:
               repo: context.repo.repo,
               commit_message: context.payload.head_commit.message,
               head: 'glitch',
-              base: 'master',
+              base: 'main',
             });
