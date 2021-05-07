@@ -10,4 +10,3 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: console.log(context)
-      - run: echo "🍏 This job's status is ${{ job.status }}."
