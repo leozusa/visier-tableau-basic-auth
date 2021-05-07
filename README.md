@@ -31,8 +31,8 @@ This will require your Tableau Server to restart!
 
 ## Use it as a template!
 
-[![Deploy it on heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/leozusa/visier-tableau-basic-auth)
-[![Remix it on glitch](https://cdn.gomix.com/f3620a78-0ad3-4f81-a271-c8a4faa20f86%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/leozusa-visier-tableau-basic-auth)
+[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/leozusa/visier-tableau-basic-auth)
+[![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/leozusa-visier-tableau-basic-auth)
 
 ## Questions?
 
