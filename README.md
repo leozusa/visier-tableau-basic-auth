@@ -32,6 +32,7 @@ This will require your Tableau Server to restart!
 ## Use it as a template!
 
 [![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/leozusa/visier-tableau-basic-auth)
+
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/leozusa-visier-tableau-basic-auth)
 
 ## Questions?
