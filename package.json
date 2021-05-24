@@ -1,0 +1,25 @@
+{
+  "name": "visier-tableau-basic-auth",
+  "version": "1.0.0",
+  "description": "Visier Data Connector API for Data Exports provides a http interface with Basic Authentication that the Web Data Connector doesn't support, so this should work as a bridge between both",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "url": "https://github.com/leozusa/visier-tableau-basic-auth"
+  },
+  "license": "MIT",
+  "keywords": [
+    "glitch",
+    "tableau",
+    "node"
+  ]
+}
