@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Visier-Tableau Basic-auth Connector</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Visier Data Connector API for Data Exports provides a http interface with Basic Authentication that the Web Data Connector doesn't support, so this should work as a bridge between both."
+    />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.2.0/papaparse.min.js"></script>
+    <script src="https://connectors.tableau.com/libs/tableauwdc-2.3.latest.js"></script>
+    <script src="/script.js" defer></script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="row">
+          <span class="header">Visier URL Connector</span>
+          <a
+            target="_blank"
+            href="https://github.com/leozusa/visier-tableau-basic-auth"
+          >
+          </a>
+        </div>
+        <p class="label">Enter your Visier Data Export URL:</p>
+        <div class="row">
+          <input id="url" type="url" />
+        </div>
+        <!--div class="row">
+          <p class="label advLabel">Dataset:</p>
+          <input id="dataset" type="text" />
+        </div-->
+        <div class="row">
+          <p class="label advLabel">Username:</p>
+          <input id="username" type="text" />
+        </div>
+        <div class="row">
+          <p class="label advLabel">Password:</p>
+          <input id="password" type="password" />
+        </div>
+        <div class="row" style="display:none;">
+          <p class="label advLabel">Custom delimiter:</p>
+          <input id="delimiter" type="text" maxlength="1" size="1" />
+        </div>
+        <button class="primary" onclick="_submitData()">
+          Get Data!
+        </button>
+        <div class="loadError" id="error"></div>
+      </div>
+    </div>
+    <div id="result"></div>
+    <img
+      src="https://devplat-hit-counter.herokuapp.com/counter.png"
+      alt=""
+      style="display:none;"
+      aria-hidden="true"
+    /><!-- Hit tracker -->
+    <script>
+      setTimeout(function() {
+        try {
+          var version = +tableau.platformVersion
+            .split(".")
+            .slice(0, 2)
+            .join(".");
+          if (version < 2019.4)
+            document.getElementById("error").innerHTML =
+              "<p>This WDC only works in Tableau Desktop 2019.4 or higher.</p><p><a href='https://www.tableau.com/support/releases' target='_blank'>Update now.</a></p>";
+        } catch (e) {
+          document.getElementById("error").innerHTML =
+            "<p>You must open this WDC in Tableau Desktop 2019.4+ to use it.</p><p><a href='https://tableau.github.io/webdataconnector/docs/wdc_use_in_tableau.html' target='_blank'>Learn how.</a></p>";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
