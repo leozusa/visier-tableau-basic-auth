@@ -7,31 +7,27 @@
 ///////////////////////////////////////////////////////////////////////
 
 let dataCache;
-
 let tableauConn = tableau.makeConnector();
 
 tableauConn.init = function(initCallback) {
-  tableau.authType = tableau.authTypeEnum.basic;
-  if (
-    tableau.phase == tableau.phaseEnum.interactivePhase &&
-    tableau.connectionData.length > 0
-  ) {
-    const conData = JSON.parse(tableau.connectionData);
-    $("#url").val(conData.dataUrl || "");
-    $("#delimiter").val(conData.delimiter || ",");
-    $("#username").val(tableau.username || "");
-    $("#password").val(tableau.password || "");
+  //tableau.authType = tableau.authTypeEnum.basic;
+  if ( tableau.connectionData && tableau.connectionData.length > 0 ) {
+    let connData = JSON.parse(tableau.connectionData);
+    $("#url").val(connData.dataUrl);
+    $("#delimiter").val(connData.delimiter == "" ? connData.delimiter : ",");
+    $("#username").val(tableau.username);//(atob(tableau.username).split(":")[0]);
+    $("#password").val(tableau.password);//(atob(tableau.username).split(":")[1]);
   }
   initCallback();
 };
 
 tableauConn.getSchema = async function(schemaCallback) {
-  let conData = JSON.parse(tableau.connectionData);
-  let dataUrl = conData.dataUrl;
+  let connData = JSON.parse(tableau.connectionData);
+  let dataUrl = connData.dataUrl;
   let username = tableau.username;
   let password = tableau.password;
   let delimiter =
-    conData.delimiter && conData.delimiter !== "" ? conData.delimiter : ",";
+    connData.delimiter && connData.delimiter !== "" ? connData.delimiter : ",";
   let data =
     dataCache ||
     (await _retrieveCSVData({ dataUrl, username, password, delimiter }));
@@ -60,10 +56,10 @@ tableauConn.getSchema = async function(schemaCallback) {
 };
 
 tableauConn.getData = async function(table, doneCallback) {
-  let conData = JSON.parse(tableau.connectionData);
-  let dataUrl = conData.dataUrl;
+  let connData = JSON.parse(tableau.connectionData);
+  let dataUrl = connData.dataUrl;
   let delimiter =
-    conData.delimiter && conData.delimiter !== "" ? conData.delimiter : ",";
+    connData.delimiter && connData.delimiter !== "" ? connData.delimiter : ",";
   let username = tableau.username;
   let password = tableau.password;
   let tableSchemas = [];
