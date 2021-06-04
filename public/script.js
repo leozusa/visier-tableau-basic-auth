@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 let dataCache;
+if (typeof tableau === 'undefined') var tableau = {};
 let tableauConn = tableau.makeConnector();
 
 tableauConn.init = function(initCallback) {
@@ -21,17 +22,8 @@ tableauConn.init = function(initCallback) {
 };
 
 tableauConn.getSchema = async function(schemaCallback) {
-  let connData = JSON.parse(tableau.connectionData);
-  let dataUrl = connData.dataUrl;
-  let username = tableau.username;
-  let password = tableau.password;
-  let delimiter =
-    connData.delimiter && connData.delimiter !== "" ? connData.delimiter : ",";
-  let data =
-    dataCache ||
-    (await _retrieveCSVData({ dataUrl, username, password, delimiter }));
+  let data = dataCache || (await _retrieveCSVData());  
   let cols = [];
-
   for (let field in data.headers) {
     cols.push({
       id: field,
@@ -39,32 +31,21 @@ tableauConn.getSchema = async function(schemaCallback) {
       dataType: data.headers[field].dataType
     });
   }
-
   var vars = {};
-  dataUrl.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+  JSON.parse(tableau.connectionData).dataUrl.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
       vars[key] = value.replace(/[^A-Za-z0-9_]/g, "_");
   });
-
   let tableSchema = {
     id: vars["id"],
     alias: vars["id"],
     columns: cols
   };
-
   schemaCallback([tableSchema]);
 };
 
 tableauConn.getData = async function(table, doneCallback) {
-  let connData = JSON.parse(tableau.connectionData);
-  let dataUrl = connData.dataUrl;
-  let delimiter =
-    connData.delimiter && connData.delimiter !== "" ? connData.delimiter : ",";
-  let username = tableau.username;
-  let password = tableau.password;
+  let data = dataCache || (await _retrieveCSVData());
   let tableSchemas = [];
-  let data =
-    dataCache ||
-    (await _retrieveCSVData({ dataUrl, username, password, delimiter }));
   let row_index = 0;
   let size = 10000;
   while (row_index < data.rows.length) {
@@ -72,7 +53,6 @@ tableauConn.getData = async function(table, doneCallback) {
     row_index += size;
     tableau.reportProgress("Getting row: " + row_index);
   }
-
   doneCallback();
 };
 
@@ -82,16 +62,8 @@ $(document).ready(function() {
 });
 
 async function _submitData(){
-  if (document.getElementById("error").innerHTML == "") {
-    _submitDataToTableau();
-  } else {
-    _submitDataToBrowser()
-  }
-}
-
-async function _submitDataToTableau() {
   let dataUrl = $("#url").val().trim();
-  let delimiter = $("#delimiter").val();
+  let delimiter = $("#delimiter") && $("#delimiter").val() !== "" ? $("#delimiter").val() : ",";
   if (!dataUrl) return _error("No data entered.");
   const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|ftp:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
   const result = dataUrl.match(urlRegex);
@@ -99,16 +71,41 @@ async function _submitDataToTableau() {
     _error("WARNING: URL may not be valid...");
     await new Promise(resolve => setTimeout(resolve, 2000));
   }
-  let connData = JSON.stringify({ dataUrl, delimiter });
-  tableau.connectionData = connData;
+  tableau.connectionData = JSON.stringify({ dataUrl, delimiter });
   tableau.username = $("#username").val().trim();
   tableau.password = $("#password").val().trim();
-  tableau.submit();
+  if (document.getElementById("error").innerHTML == "") {
+    tableau.submit();
+  } else {
+    _submitDataToBrowser()
+  }
 }
 
-async function _retrieveCSVData({ dataUrl, username, password, delimiter }) {
-  let proxy = "/proxy/" + dataUrl;
-  let result = await $.post(proxy, { username, password });
+async function _retrieveCSVData() {
+  let delimiter = JSON.parse(tableau.connectionData).delimiter;
+  dataCache = _csv2table(await _retrievePostData(), delimiter);
+  return dataCache;
+}
+
+async function _submitDataToBrowser() {
+  var delimiter = JSON.parse(tableau.connectionData).delimiter;
+  var postdata = await _retrievePostData();
+  var lines = postdata.split("\r\n"),
+  output = [],
+  i;
+  for (i = 0; i < lines.length; i++)
+    output.push("<tr><td>"
+    + lines[i].split(delimiter).map(Function.prototype.call, String.prototype.trim).join("</td><td>")
+    + "</td></tr>");
+  document.getElementById('result').innerHTML = "<table>" + output.join("") + "</table>"
+  return;
+}
+
+async function _retrievePostData() {
+  let dataUrl = window.location.href + "proxy/" +  JSON.parse(tableau.connectionData).dataUrl;
+  let username = tableau.username;
+  let password = tableau.password;
+  let result = await $.post(dataUrl, { username, password });
   if (result.error) {
     if (tableau.phase !== "interactive") {
       console.error(result.error);
@@ -118,38 +115,7 @@ async function _retrieveCSVData({ dataUrl, username, password, delimiter }) {
     }
     return;
   }
-  dataCache = _csv2table(result.body, delimiter);
-  return dataCache;
-}
-
-async function _submitDataToBrowser() {
-  let dataUrl = $("#url").val().trim();
-  let delimiter = $("#delimiter") && $("#delimiter").val() !== "" ? $("#delimiter").val() : ",";
-  let username = $("#username").val().trim();
-  let password = $("#password").val().trim();
-  if (!dataUrl) return _error("No data entered.");
-  const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|ftp:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
-  const urlcheck = dataUrl.match(urlRegex);
-  if (urlcheck === null) {
-    _error("WARNING: URL may not be valid...");
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
-  let connData = JSON.stringify({ dataUrl, delimiter });
-  let proxy = "/proxy/" + dataUrl;
-  let result = await $.post(proxy, { username, password });
-  if (result.error) {
-    _error(result.error);
-    return;
-  }
-  var lines = result.body.split("\r\n"),
-  output = [],
-  i;
-  for (i = 0; i < lines.length; i++)
-    output.push("<tr><td>"
-    + lines[i].split(delimiter).map(Function.prototype.call, String.prototype.trim).join("</td><td>")
-    + "</td></tr>");
-  document.getElementById('result').innerHTML = "<table>" + output.join("") + "</table>"
-  return;
+  return result.body;
 }
 
 function _csv2table(csv, delimiter) {
