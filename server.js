@@ -8,25 +8,25 @@
 
 const express = require("express");
 const fetch = require("node-fetch");
-const app = express();
+var app = module.exports = express();
 
 app.use(express.static("public"));
 app.use(express.text());
+app.use(express.urlencoded({ extended: false }))
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
 app.post("/proxy/*", async (req, res) => {
-  let base = req.url.split("/proxy/")[1].split("-dataset-");
-  let url = base[0];
-  let auth = base[1];
+  let username = req.body.username;
+  let password = req.body.password;
+  let url = req.url.split("/proxy/")[1];
+  let auth = Buffer.from(`${username}:${password}`).toString("base64");
   let options = { method: "GET" };
-  //let username = req.username;
-  //let password = req.password;
   options["headers"] = {
     Authorization:
-      `Basic ${auth}`// + Buffer.from(`${username}:${password}`).toString("base64")
+      `Basic ${auth}`
   };
 
   try {

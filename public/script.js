@@ -10,13 +10,12 @@ let dataCache;
 let tableauConn = tableau.makeConnector();
 
 tableauConn.init = function(initCallback) {
-  //tableau.authType = tableau.authTypeEnum.basic;
   if ( tableau.connectionData && tableau.connectionData.length > 0 ) {
     let connData = JSON.parse(tableau.connectionData);
     $("#url").val(connData.dataUrl);
     $("#delimiter").val(connData.delimiter == "" ? connData.delimiter : ",");
-    $("#username").val(tableau.username);//(atob(tableau.username).split(":")[0]);
-    $("#password").val(tableau.password);//(atob(tableau.username).split(":")[1]);
+    $("#username").val(tableau.username);
+    $("#password").val(tableau.password);
   }
   initCallback();
 };
@@ -77,8 +76,10 @@ tableauConn.getData = async function(table, doneCallback) {
   doneCallback();
 };
 
-tableau.connectionName = "Visier Data";
-tableau.registerConnector(tableauConn);
+$(document).ready(function() {
+  tableau.connectionName = "Visier Data";
+  tableau.registerConnector(tableauConn);
+});
 
 async function _submitData(){
   if (document.getElementById("error").innerHTML == "") {
@@ -89,9 +90,7 @@ async function _submitData(){
 }
 
 async function _submitDataToTableau() {
-  let dataUrl = $("#url")
-    .val()
-    .trim();
+  let dataUrl = $("#url").val().trim();
   let delimiter = $("#delimiter").val();
   if (!dataUrl) return _error("No data entered.");
   const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|ftp:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
@@ -108,8 +107,7 @@ async function _submitDataToTableau() {
 }
 
 async function _retrieveCSVData({ dataUrl, username, password, delimiter }) {
-  let proxy =
-    "/proxy/" + dataUrl + "-dataset-" + btoa(`${username}:${password}`);
+  let proxy = "/proxy/" + dataUrl;
   let result = await $.post(proxy, { username, password });
   if (result.error) {
     if (tableau.phase !== "interactive") {
@@ -128,9 +126,7 @@ async function _submitDataToBrowser() {
   let dataUrl = $("#url").val().trim();
   let delimiter = $("#delimiter") && $("#delimiter").val() !== "" ? $("#delimiter").val() : ",";
   let username = $("#username").val().trim();
-  let password = $("#password")
-    .val()
-    .trim();
+  let password = $("#password").val().trim();
   if (!dataUrl) return _error("No data entered.");
   const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|ftp:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
   const urlcheck = dataUrl.match(urlRegex);
@@ -139,7 +135,7 @@ async function _submitDataToBrowser() {
     await new Promise(resolve => setTimeout(resolve, 2000));
   }
   let connData = JSON.stringify({ dataUrl, delimiter });
-  let proxy = "/proxy/" + dataUrl + "-dataset-" + btoa(`${username}:${password}`);
+  let proxy = "/proxy/" + dataUrl;
   let result = await $.post(proxy, { username, password });
   if (result.error) {
     _error(result.error);
@@ -229,27 +225,22 @@ function _csv2table(csv, delimiter) {
   }
 
   for (let field in headers) {
-    // strings
     if (headers[field].string) {
       headers[field].dataType = "string";
       continue;
     }
-    // nulls
     if (Object.keys(headers[field]).length === 1 && headers[field].null) {
       headers[field].dataType = "string";
       continue;
     }
-    // floats
     if (headers[field].float) {
       headers[field].dataType = "float";
       continue;
     }
-    // integers
     if (headers[field].int) {
       headers[field].dataType = "int";
       continue;
     }
-    // booleans
     if (headers[field].bool) {
       headers[field].dataType = "bool";
       continue;
