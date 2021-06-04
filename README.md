@@ -7,8 +7,8 @@ so this should work as a bridge between both
 
 ## How to use
 
-1. Start a new WDC connection in Tableau Desktop 2019.4 or higher and enter: https://leozusa-visier-tableau-basic-auth.glitch.me/
-2. Enter your Data Export link with API key.
+1. Start a new WDC connection in Tableau Desktop 2019.4 or higher and enter: [https://visier-tableau-basic-auth.herokuapp.com/](https://visier-tableau-basic-auth.herokuapp.com/)
+2. Enter your Data Export link (with API key).
 3. Log in using your Data Export credentials.
 4. Click **Get Data!**
 
