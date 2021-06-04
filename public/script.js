@@ -3,11 +3,12 @@
 // Visier Data Connector API for Data Exports.                       //
 // Author: Leonardo Zuniga                                           //
 // GitHub: https://github.com/leozusa/visier-tableau-basic-auth      //
-// Version 1.5                                                       //
+// Version 1.6                                                       //
 ///////////////////////////////////////////////////////////////////////
 
 let dataCache;
 if (typeof tableau === 'undefined') var tableau = {};
+if (typeof Papa === 'undefined') var Papa = {};
 let tableauConn = tableau.makeConnector();
 
 tableauConn.init = function(initCallback) {
@@ -102,10 +103,9 @@ async function _submitDataToBrowser() {
 }
 
 async function _retrievePostData() {
-  let dataUrl = window.location.href + "proxy/" +  encodeURIComponent(JSON.parse(tableau.connectionData).dataUrl);
-  let username = tableau.username;
-  let password = tableau.password;
-  let result = await $.post(dataUrl, { username, password });
+  let a = btoa(tableau.username+":"+tableau.password);
+  let b = btoa(JSON.parse(tableau.connectionData).dataUrl);
+  let result = await $.post("/", { a, b });
   if (result.error) {
     if (tableau.phase !== "interactive") {
       console.error(result.error);
@@ -213,7 +213,6 @@ function _csv2table(csv, delimiter) {
     }
     headers[field].dataType = "string";
   }
-
   return { headers, rows };
 }
 
@@ -228,7 +227,7 @@ function _error(message) {
 
 $("#url").keypress(function(event) {
   if (event.keyCode === 13) {
-    _submitDataToTableau();
+    _submitData();
   }
 });
 

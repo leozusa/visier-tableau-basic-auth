@@ -3,7 +3,7 @@
 // Visier Data Connector API for Data Exports.                       //
 // Author: Leonardo Zuniga                                           //
 // GitHub: https://github.com/leozusa/visier-tableau-basic-auth      //
-// Version 1.5                                                       //
+// Version 1.6                                                       //
 ///////////////////////////////////////////////////////////////////////
 
 const express = require("express");
@@ -18,17 +18,11 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.post("/proxy/*", async (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-  let url = decodeURIComponent(req.url.split("/proxy/")[1]);
-  let auth = Buffer.from(`${username}:${password}`).toString("base64");
+app.post("/", async (req, res) => {
+  let a = req.body.a;
+  let url = Buffer.from(req.body.b, 'base64').toString();
   let options = { method: "GET" };
-  options["headers"] = {
-    Authorization:
-      `Basic ${auth}`
-  };
-
+  options["headers"] = { Authorization: `Basic ${a}` };
   try {
     let response = await fetch(url, options);
     let data = await response.text();
