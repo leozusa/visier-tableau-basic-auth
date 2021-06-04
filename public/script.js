@@ -3,7 +3,7 @@
 // Visier Data Connector API for Data Exports.                       //
 // Author: Leonardo Zuniga                                           //
 // GitHub: https://github.com/leozusa/visier-tableau-basic-auth      //
-// Version 1.0                                                       //
+// Version 1.5                                                       //
 ///////////////////////////////////////////////////////////////////////
 
 let dataCache;
@@ -102,7 +102,7 @@ async function _submitDataToBrowser() {
 }
 
 async function _retrievePostData() {
-  let dataUrl = window.location.href + "proxy/" +  JSON.parse(tableau.connectionData).dataUrl;
+  let dataUrl = window.location.href + "proxy/" +  encodeURIComponent(JSON.parse(tableau.connectionData).dataUrl);
   let username = tableau.username;
   let password = tableau.password;
   let result = await $.post(dataUrl, { username, password });
