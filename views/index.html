@@ -20,36 +20,38 @@
     <div class="container">
       <div class="card">
         <div class="row">
-          <span class="header">Visier URL Connector</span>
           <a
             target="_blank"
             href="https://github.com/leozusa/visier-tableau-basic-auth"
           >
+            <span class="header">Visier URL Connector</span>
           </a>
         </div>
         <p class="label">Enter your Visier Data Export URL:</p>
-        <div class="row">
-          <input id="url" type="url" />
-        </div>
-        <!--div class="row">
-          <p class="label advLabel">Dataset:</p>
-          <input id="dataset" type="text" />
-        </div-->
-        <div class="row">
-          <p class="label advLabel">Username:</p>
-          <input id="username" type="text" />
-        </div>
-        <div class="row">
-          <p class="label advLabel">Password:</p>
-          <input id="password" type="password" />
-        </div>
-        <div class="row" style="display:none;">
-          <p class="label advLabel">Custom delimiter:</p>
-          <input id="delimiter" type="text" maxlength="1" size="1" />
-        </div>
-        <button class="primary" onclick="_submitData()">
-          Get Data!
-        </button>
+        <form action="javascript:void(0);" method="get">
+          <div class="row">
+            <input id="url" type="url" />
+          </div>
+          <!--div class="row">
+            <p class="label advLabel">Dataset:</p>
+            <input id="dataset" type="text" />
+          </div-->
+          <div class="row">
+            <p class="label advLabel">Username:</p>
+            <input id="username" type="text" />
+          </div>
+          <div class="row">
+            <p class="label advLabel">Password:</p>
+            <input id="password" type="password" />
+          </div>
+          <div class="row" style="display:none;">
+            <p class="label advLabel">Custom delimiter:</p>
+            <input id="delimiter" type="text" maxlength="1" size="1" />
+          </div>
+          <button class="primary" onclick="_submitData()">
+            Get Data!
+          </button>
+        </form>
         <div class="loadError" id="error"></div>
       </div>
     </div>
