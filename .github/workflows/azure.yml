@@ -1,3 +1,5 @@
+# DEPRECATED: This project is deprecated. Tableau has moved to a new method for connecting to external data. See README.md for more information. */
+
 # This workflow will build and push a node.js application to an Azure Web App when a release is created.
 #
 # This workflow assumes you have already created the target Azure App Service web app.
