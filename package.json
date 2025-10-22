@@ -11,7 +11,7 @@
     "node-fetch": "^2.6.1"
   },
   "engines": {
-    "node": "12.x"
+    "node": "20.x"
   },
   "repository": {
     "url": "https://github.com/leozusa/visier-tableau-basic-auth"
