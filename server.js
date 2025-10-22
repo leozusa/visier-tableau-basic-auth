@@ -1,3 +1,4 @@
+// DEPRECATED: This project is deprecated. Tableau has moved to a new method for connecting to external data. See README.md for more information.
 ///////////////////////////////////////////////////////////////////////
 // Visier-Tableau Basic-auth Connector                               //
 // Visier Data Connector API for Data Exports.                       //

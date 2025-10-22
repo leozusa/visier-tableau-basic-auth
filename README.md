@@ -5,6 +5,10 @@
 Visier Data Connector API for Data Exports provides a http interface with Basic Authentication that the [Web Data Connector](https://tableau.github.io/webdataconnector/docs/) doesn't support,
 so this should work as a bridge between both
 
+> **Disclaimer:** This current version is now deprecated as Tableau has moved to a different method for connecting to external data, as described [here](https://help.tableau.com/current/api/webdataconnector/en-us/index.html). I'll provide an updated version based on this new method.
+>
+> Additionally, note that Visier has created a connector with limited availability: https://docs.visier.com/developer/Studio/data/data%20connectors/tableau/tableau-connector.htm
+
 ## How to use
 
 1. Start a new WDC connection in Tableau Desktop 2019.4 or higher and enter: [https://visier-tableau-basic-auth.herokuapp.com/](https://visier-tableau-basic-auth.herokuapp.com/)
@@ -32,7 +36,6 @@ This will require your Tableau Server to restart!
 ## Use it as a template!
 
 [![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/leozusa/visier-tableau-basic-auth)
-[![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/leozusa/visier-tableau-basic-auth)
 
 ## Questions?
 

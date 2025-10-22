@@ -1,3 +1,4 @@
+/* DEPRECATED: This project is deprecated. Tableau has moved to a new method for connecting to external data. See README.md for more information. */
 {
   "name": "Visier-Tableau Basic-auth Connector",
   "description": "Visier Data Connector API for Data Exports provides a http interface with Basic Authentication that the Web Data Connector doesn't support, so this should work as a bridge between both",
